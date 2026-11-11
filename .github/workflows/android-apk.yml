@@ -1,0 +1,74 @@
+name: Android APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: Build Alistedi Android APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npm run typecheck
+
+      - name: Generate Android project
+        run: npx expo prebuild --platform android --no-install
+        env:
+          CI: "1"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Restore private Android signing key
+        env:
+          ALISTEDI_DEBUG_KEYSTORE_B64: ${{ secrets.ALISTEDI_DEBUG_KEYSTORE_B64 }}
+        run: |
+          if [ -z "$ALISTEDI_DEBUG_KEYSTORE_B64" ]; then
+            echo "::error::Missing ALISTEDI_DEBUG_KEYSTORE_B64 repository secret."
+            exit 1
+          fi
+          printf '%s' "$ALISTEDI_DEBUG_KEYSTORE_B64" | base64 --decode > android/app/debug.keystore
+          chmod 600 android/app/debug.keystore
+
+      - name: Build release APK
+        run: |
+          cd android
+          ./gradlew --no-daemon assembleRelease
+
+      - name: Verify and hash APK
+        run: |
+          APK="android/app/build/outputs/apk/release/app-release.apk"
+          test -s "$APK"
+          sha256sum "$APK" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: alistedi-android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 30

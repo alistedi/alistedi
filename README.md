@@ -1,6 +1,6 @@
 # Alistedi
 
-Kişisel kullanım için Android uygulaması: bir moderatör ve üç AI tartışmacıyla çok turlu tartışmalar oluşturur. Proje Expo, React Native, TypeScript ve SQLite kullanır.
+Kişisel kullanım için Android uygulaması: bir moderatör ve üç AI tartışmacıyla çok turlu tartışmalar oluşturur. Proje Expo, React Native, TypeScript ve cihaz içi SQLite kullanır.
 
 ## Geliştirme ortamında çalıştırma
 
@@ -10,16 +10,16 @@ Kişisel kullanım için Android uygulaması: bir moderatör ve üç AI tartış
    ```bash
    git clone https://github.com/alistedi/alistedi.git
    cd alistedi
-   npm install
+   npm ci
    ```
 
-3. Geliştirme sunucusunu başlatın:
+3. Expo geliştirme sunucusunu başlatın:
 
    ```bash
    npx expo start
    ```
 
-Expo Go ile önizleme yapılabilir. Uygulamanın son cihaz testleri ve APK’sı için Android build alınmalıdır.
+Expo Go ile arayüz önizlenebilir. Tam yerel Android build için ayrıca Android SDK kurulu olmalıdır.
 
 ## AI sağlayıcısını ayarlama
 
@@ -29,25 +29,18 @@ API anahtarları `expo-secure-store` üzerinden Android’in güvenli depolamas�
 
 Konu ve tartışma mesajları yanıt üretmek için seçilen sağlayıcının API’sine gönderilir. Kullanım sağlayıcının fiyat ve kullanım sınırlarına tabidir. Oturum ekranında sağlayıcıdan gelen token kullanımı toplanır; sağlayıcı fiyatlarını karşılaştıran tahmini maliyet hesabı henüz yoktur. Anahtarları yalnızca güvendiğiniz cihazda kullanın.
 
-## Android APK üretimi
+## GitHub Actions ile APK üretme
 
-APK için EAS Build kullanılır; Expo hesabı ve derleme sırasında sorulabilecek Android imzalama ayarları gerekir. İlk kez EAS kullanıyorsanız proje klasöründe giriş yapın:
+Expo bu projede uygulama altyapısıdır; EAS bulut build’i zorunlu değildir. GitHub Actions `npx expo prebuild` ile Android projesini üretir ve Gradle ile imzalı APK’yı derler. Bunun için Expo hesabı veya yerel Android SDK gerekmez.
 
-```bash
-npx eas-cli@latest login
-npx eas-cli@latest build --platform android --profile preview
-```
+Her `main` dalı push’unda **Android APK** workflow’u otomatik çalışır. Elle başlatmak için GitHub deposunda **Actions → Android APK → Run workflow** yolunu izleyin. Başarılı çalışmanın `Summary`/`Artifacts` bölümünden **alistedi-android-apk** artifact’ini indirin. Artifact 30 gün saklanır.
 
-Bu depodaki `preview` profili Android APK üretmek üzere ayarlanmıştır. Derleme başarılı olduktan sonra EAS, APK’yı indirme bağlantısıyla sunar. APK henüz bu depoya eklenmiş değildir.
+Workflow APK’yı kişisel cihazda sideload etmek için üretir; Play Store yayını için tasarlanmamıştır. Android release varyantı sabit bir imzalama anahtarıyla imzalanır. Bu anahtar GitHub depo ayarlarında `ALISTEDI_DEBUG_KEYSTORE_B64` adlı Actions secret’ında tutulur; kaynak koda veya Git geçmişine eklenmemelidir. Aynı anahtarı korumak, sonraki APK’ları mevcut uygulamanın üzerine kurup cihazdaki sohbet verilerini saklayabilmek için önemlidir. Secret’ı silmeyin veya değiştirmeyin.
 
 ## Kayıtlar ve yedekleme
 
 Tartışmalar cihazda `alistedi.db` SQLite veritabanında saklanır. API anahtarları ayrı tutulur. Bir oturumu açmak onu otomatik olarak devam ettirmez; eski oturumdaki **Yeniye referans ver** eylemi yeni oturum oluşturma ekranına açık bağlam taşır ve eski oturumu değiştirmez. Tamamlanan tartışma **Markdown dışa aktar** ile, tüm sohbet arşivi **Ayarlar → Tüm tartışmaların JSON yedeğini dışa aktar** ile paylaşılabilir. JSON yedeği API anahtarlarını içermez. Bu sürüm JSON yedeğini dışa aktarır; henüz yedekten içe aktarma/geri yükleme akışı sunmaz. Uygulamayı kaldırmak cihaz içindeki kayıtları silebilir; yedek dosyasını uygulama dışında saklayın.
 
-## Gizli dosyalar ve GitHub
+## Güvenlik ve mevcut durum
 
-Bu depo Public olsa da hiçbir API anahtarı, `.env` dosyası, APK veya imzalama anahtarı commit edilmemelidir. `.gitignore` yerel sırları ve build çıktılarını dışlar. Güvenlik nedeniyle API anahtarını kod dosyasına veya issue/commit mesajlarına yapıştırmayın.
-
-## Mevcut geliştirme durumu
-
-Şu anda temel mobil ekranlar, cihaz içi SQLite oturum kayıtları, SecureStore anahtar saklama, OpenAI uyumlu sohbet istemcisi ve 10 turluk tartışma motoru iskeleti vardır. Uçtan uca cihaz testi, arama/yönetim akışlarının tamamlanması, toplu yedekleme ve APK build doğrulaması geliştirme kapsamında sürmektedir.
+Bu depo Public olsa da hiçbir API anahtarı, `.env` dosyası, APK veya imzalama anahtarı commit edilmemelidir. `.gitignore` yerel sırları ve build çıktılarını dışlar. Uygulamanın TypeScript kontrolü ve Android bundle export’u doğrulanmıştır; GitHub Actions ilk APK derlemesi workflow çalışınca doğrulanacaktır.
