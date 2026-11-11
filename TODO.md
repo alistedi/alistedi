@@ -42,8 +42,9 @@
 - [ ] Kullanıcı tartışmanın tam metnini ve nihai raporunu TXT veya Markdown olarak dışa aktarabilir.
 - [ ] Test edilen temel kullanım akışı: yeni tartışma oluşturma, üç tartışmacıyla 10 tur eşit konuşma, bağlam aktarımı, final raporu ve otomatik devam etmeme, geçmişe kalıcı kayıt, kapatıp açınca geçmişi geri yükleme, oturumların mesajlarını karıştırmama, eski oturumu görüntüleme modunda açma, eski tartışmayı referans alan yeni bağımsız oturum, başlık/arşiv/geri alma/onaylı silme, başlığa göre arama, dışa aktarma, API hatasında başarılı mesajları koruma ve mobil ekranı kullanma.
 - [ ] Teslimde çalışan kaynak kodu, eksiksiz ve anlaşılır kurulum/çalıştırma adımları, API anahtarı ayarı açıklaması, veritabanı kurulum/şema adımları, yedekleme yönergesi ve hata durumlarında yapılacaklar bulunur.
-- [ ] Android APK build yapılandırması hazırlanır; yalnızca build gerçekten başarılı olursa APK çıktısı teslim edilir ve doğrulanan temel akış açıklanır.
+- [x] Android APK build yapılandırması hazırlandı; başarılı build sonrası APK artifact'i üretildi ve SHA-256 değeri kaydedildi.
 
 ## 5. GitHub Actions APK build durumu
 - [x] Expo EAS hesabı gerektirmeyen GitHub Actions workflow'u, 30 günlük artifact ve repository secret tabanlı imzalama yapılandırıldı.
-- [ ] İlk uzak GitHub Actions APK build'inin başarılı olması, APK'nın indirilmesi ve gerçek Android cihazda kurulum/temel akış testinin yapılması.
+- [x] İlk uzak GitHub Actions APK build'i başarılı oldu; APK artifact'i indirildi ve zip yapısı kontrol edildi (run #43060388225).
+- [ ] APK'yı gerçek Android cihaza kurup temel tartışma akışını test et.

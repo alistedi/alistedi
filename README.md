@@ -33,7 +33,7 @@ Konu ve tartışma mesajları yanıt üretmek için seçilen sağlayıcının AP
 
 Expo bu projede uygulama altyapısıdır; EAS bulut build’i zorunlu değildir. GitHub Actions `npx expo prebuild` ile Android projesini üretir ve Gradle ile imzalı APK’yı derler. Bunun için Expo hesabı veya yerel Android SDK gerekmez.
 
-Her `main` dalı push’unda **Android APK** workflow’u otomatik çalışır. Elle başlatmak için GitHub deposunda **Actions → Android APK → Run workflow** yolunu izleyin. Başarılı çalışmanın `Summary`/`Artifacts` bölümünden **alistedi-android-apk** artifact’ini indirin. Artifact 30 gün saklanır.
+Her `main` dalı push’unda **Android APK** workflow’u otomatik çalışır. Elle başlatmak için GitHub deposunda **Actions → Android APK → Run workflow** yolunu izleyin. Başarılı çalışmanın `Summary`/`Artifacts` bölümünden **alistedi-android-apk** artifact’ini indirin. Artifact 30 gün saklanır. İlk başarılı build: [GitHub Actions run #43060388225](https://github.com/alistedi/alistedi/actions/runs/43060388225). APK `com.alistedi.app` kimliğiyle üretildi; indirdiğim APK’nın SHA-256 değeri `8eced0c4076260e0a94d5ee9f1ab1eca81c94c6fae8bdac871581f70df9e8ebe`.
 
 Workflow APK’yı kişisel cihazda sideload etmek için üretir; Play Store yayını için tasarlanmamıştır. Android release varyantı sabit bir imzalama anahtarıyla imzalanır. Bu anahtar GitHub depo ayarlarında `ALISTEDI_DEBUG_KEYSTORE_B64` adlı Actions secret’ında tutulur; kaynak koda veya Git geçmişine eklenmemelidir. Aynı anahtarı korumak, sonraki APK’ları mevcut uygulamanın üzerine kurup cihazdaki sohbet verilerini saklayabilmek için önemlidir. Secret’ı silmeyin veya değiştirmeyin.
 
@@ -43,4 +43,4 @@ Tartışmalar cihazda `alistedi.db` SQLite veritabanında saklanır. API anahtar
 
 ## Güvenlik ve mevcut durum
 
-Bu depo Public olsa da hiçbir API anahtarı, `.env` dosyası, APK veya imzalama anahtarı commit edilmemelidir. `.gitignore` yerel sırları ve build çıktılarını dışlar. Uygulamanın TypeScript kontrolü ve Android bundle export’u doğrulanmıştır; GitHub Actions ilk APK derlemesi workflow çalışınca doğrulanacaktır.
+Bu depo Public olsa da hiçbir API anahtarı, `.env` dosyası, APK veya imzalama anahtarı commit edilmemelidir. `.gitignore` yerel sırları ve build çıktılarını dışlar. TypeScript kontrolü, Android bundle export’u ve GitHub Actions release APK derlemesi başarıyla tamamlandı. Gerçek Android cihaza kurulum ve temel akış testi henüz yapılmadı.
