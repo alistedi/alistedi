@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Alistedi",
+    "slug": "alistedi",
+    "version": "0.1.0",
+    "description": "Kişisel, çok katılımcılı AI tartışma uygulaması",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "alistedi",
+    "userInterfaceStyle": "light",
+    "primaryColor": "#0E6B65",
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.alistedi.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0E6B65",
+        "foregroundImage": "./assets/images/icon.png"
+      },
+      "predictiveBackGestureEnabled": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "server",
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      ["expo-secure-store", { "configureAndroidBackup": true }],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#F5F4F0"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
